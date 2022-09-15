@@ -1,0 +1,10 @@
+{
+    "urls": {
+        "web": "https://open.feishu.cn/open-apis/bot/v2/hook/437ee9c4-267b-4948-bf7e-32da9bca4607",
+        "backend": "https://open.feishu.cn/open-apis/bot/v2/hook/43a73af0-c381-471d-97a0-ce238935cd85"
+    },
+    "secrets": {
+        "web": "KaVrOt6WB1G6UIIQOxEnZd",
+        "backend": "v62Vm5SmIrUKQ4FyP2CCI"
+    }
+}

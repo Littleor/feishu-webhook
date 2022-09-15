@@ -1,0 +1,16 @@
+{
+  "name": "feishu-webhook",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  },
+  "scripts": {
+    "start": "nodemon server.js"
+  }
+}

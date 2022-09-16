@@ -6,5 +6,7 @@
     "secrets": {
         "web": "KaVrOt6WB1G6UIIQOxEnZd",
         "backend": "v62Vm5SmIrUKQ4FyP2CCI"
-    }
+    },
+    "uri":  "https://open.feishu.cn/open-apis/bot/v2/hook/437ee9c4-267b-4948-bf7e-32da9bca4607",
+    "secret": "KaVrOt6WB1G6UIIQOxEnZd"
 }

@@ -1,15 +1,15 @@
 const express = require('express');
-const rp = require('request-promise');
 const bodyparser = require('body-parser');
-const { urls, secrets } = require('./config.json');
-const { genSign } = require('./sign')
+const { secret } = require('./config.json');
+const { genSign } = require('./app/utils');
+const pushCommit = require('./app/pushCommit');
+const createBranch = require('./app/createBranch');
 
 const app = express();
 app.use(bodyparser.json())
 
-app.post('/push/:repository', async (req, res) => {
-    const { repository } = req.params;
-    const result = await send(repository, req.body.payload)
+app.post('/push', async (req, res) => {
+    const result = await send(req)
     const { StatusCode, StatusMessage, code, msg } = result
     if (StatusCode === 0) {
         res.json({
@@ -20,60 +20,27 @@ app.post('/push/:repository', async (req, res) => {
         res.json({
             code,
             message: msg
+
         })
     }
 })
 
-async function send(repository, payload) {
-    const uri = urls[repository];
-    const timestamp = (new Date().getTime()).toString().substring(0, 10);
-    const sign = genSign(timestamp, secrets[repository])
-    return await sendWebhook(uri, timestamp, sign, payload);
-}
+async function send(req) {
 
-async function sendWebhook(uri, timestamp, sign, payload) {
-    const user = payload.pusher.name;
-    // get all commits
-    const content = payload.commits.map(item => {
-        return ([
-            {
-                tag: 'text',
-                text: `Commit ID: ${(item.id).substring(0, 7)}`
-            },
-            {
-                tag: 'a',
-                text: '点击查看 commit 详细信息',
-                href: item.url
-            },
-
-        ])
-    });
-    // add @all
-    content.push([ {
-        "tag": "at",
-        "user_id": "all",
-    }]);
-
-    const options = {
-        method: 'POST',
-        uri,
-        body: {
-            timestamp,
-            sign,
-            msg_type: 'post',
-            content: {
-                post: {
-                    "zh_cn": {
-                        title: `${user} 提交了新的 Commit`,
-                        content
-                    }
-                }
-            }
-        },
-        json: true
+    const { payload } = req.body;
+    // get timestamp and sign
+    const { timestamp, sign } = genSign((new Date().getTime()).toString().substring(0, 10), secret);
+    // switch type
+    const type = req.headers['x-github-event'];
+    console.log('push type', type)
+    switch (type) {
+        case 'push': // push commit
+            return await pushCommit(timestamp, sign, payload);
+        case 'create':
+            return await createBranch(timestamp, sign, payload);
     }
-    return await rp(options);
 }
+
 
 app.listen(9001, () => {
     console.log('listening on *:9001');

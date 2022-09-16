@@ -54,7 +54,7 @@ module.exports = async function pushCommit(timestamp, sign, payload) {
                     },
                     {
                         tag: 'markdown',
-                        content: `${comment}[点击查看comment详细信息](${commentUrl})`
+                        content: `*Comment:* ${comment}[点击查看comment详细信息](${commentUrl})`
                     }
                 ]
             }

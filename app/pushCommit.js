@@ -15,7 +15,7 @@ module.exports = async function pushCommit(timestamp, sign, payload) {
     // get all commits
     const elements = payload.commits.map(item => ({
         tag: 'markdown',
-        content: `*Commit ID:* ${(item.id).substring(0, 7)} *Commit message:* ${item.message}[点击查看commit详细信息](${item.url})`
+        content: `*Commit ID:* ${(item.id).substring(0, 7)} *Commit message:* ${item.message} [点击查看commit详细信息](${item.url})`
     }));
 
     const options = {

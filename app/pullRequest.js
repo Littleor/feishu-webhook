@@ -56,7 +56,7 @@ module.exports = async function pullRequest(timestamp, sign, payload) {
                     },
                     {
                         tag: 'markdown',
-                        content: `${user} ${action} a pull request: ${content}[点击查看RP详细信息](${rpUrl})`
+                        content: `${user} ${action} a pull request: ${content} [点击查看RP详细信息](${rpUrl})`
                     }
                 ]
             }

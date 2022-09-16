@@ -27,4 +27,10 @@ port: 9001
 
 - https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN
 - 添加机器人时，打开安全设置的签名校验，并将``密钥``添加至 config.json secret 中。
-- 发送消息卡片，转发 branch commit PR comment 相关的推送，显示来自哪个 Repo 提交者头像以及 branch name/commit message/comment message
+
+### 支持类型
+- create branch
+- delete branch
+- commit comment
+- pull request
+

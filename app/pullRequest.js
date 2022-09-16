@@ -1,11 +1,13 @@
 const { uri } = require('../config.json');
 const rp = require('request-promise');
 
-//  create branch
-module.exports = async function createBranch(timestamp, sign, payload) {
-    const user = payload.sender.login; // sender
+// pull request
+module.exports = async function pullRequest(timestamp, sign, payload) {
+    const user = payload.sender.login; // pusher
     const repo = payload.repository.name; // repo name
-    const branch = payload.ref; // branch name
+    const action = payload.action; // pull request status
+    const content = payload.pull_request.title; // pull content
+    const rpUrl = payload.pull_request.html_url; // pull request url
 
     const options = {
         method: 'POST',
@@ -22,9 +24,9 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                 header: {
                     title: {
                         tag: "plain_text", // 只支持 plain-text
-                        content: `Create Branch`,
+                        content: `Pull Request(${action})`,
                     },
-                    template: 'blue'
+                    template: 'wathet'
                 },
                 elements: [
                     {
@@ -33,6 +35,7 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                             tag: "lark_md",
                             content: `**Repo: **${repo}`,
                         },
+
                     },
                     {
                         tag: "note",
@@ -47,9 +50,13 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                             },
                             {
                                 tag: "plain_text",
-                                content: `${user} create new branch: ${branch}`
+                                content: `${user}`
                             }
                         ]
+                    },
+                    {
+                        tag: 'markdown',
+                        content: `${user} ${action} a pull request: ${content}[点击查看RP详细信息](${rpUrl})`
                     }
                 ]
             }

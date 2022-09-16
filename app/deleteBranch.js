@@ -1,8 +1,8 @@
 const { uri } = require('../config.json');
 const rp = require('request-promise');
 
-//  create branch
-module.exports = async function createBranch(timestamp, sign, payload) {
+//  delete branch
+module.exports = async function deleteBranch(timestamp, sign, payload) {
     const user = payload.sender.login; // sender
     const repo = payload.repository.name; // repo name
     const branch = payload.ref; // branch name
@@ -22,9 +22,9 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                 header: {
                     title: {
                         tag: "plain_text", // 只支持 plain-text
-                        content: `Create Branch`,
+                        content: `Delete Branch`,
                     },
-                    template: 'blue'
+                    template: 'red'
                 },
                 elements: [
                     {
@@ -47,7 +47,7 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                             },
                             {
                                 tag: "plain_text",
-                                content: `${user} create new branch: ${branch}`
+                                content: `${user} delete branch: ${branch}`
                             }
                         ]
                     }

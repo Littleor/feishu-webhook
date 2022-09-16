@@ -1,11 +1,12 @@
 const { uri } = require('../config.json');
 const rp = require('request-promise');
 
-//  create branch
-module.exports = async function createBranch(timestamp, sign, payload) {
+// commit comment
+module.exports = async function pushCommit(timestamp, sign, payload) {
     const user = payload.sender.login; // sender
     const repo = payload.repository.name; // repo name
-    const branch = payload.ref; // branch name
+    const comment = payload.comment.body; // comment
+    const commentUrl = payload.comment.html_url; // comment url
 
     const options = {
         method: 'POST',
@@ -22,9 +23,9 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                 header: {
                     title: {
                         tag: "plain_text", // 只支持 plain-text
-                        content: `Create Branch`,
+                        content: `Commit Comment`,
                     },
-                    template: 'blue'
+                    template: 'orange'
                 },
                 elements: [
                     {
@@ -32,7 +33,7 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                         text: {
                             tag: "lark_md",
                             content: `**Repo: **${repo}`,
-                        },
+                        }
                     },
                     {
                         tag: "note",
@@ -47,9 +48,13 @@ module.exports = async function createBranch(timestamp, sign, payload) {
                             },
                             {
                                 tag: "plain_text",
-                                content: `${user} create new branch: ${branch}`
+                                content: `${user}`
                             }
                         ]
+                    },
+                    {
+                        tag: 'markdown',
+                        content: `${comment}[点击查看comment详细信息](${commentUrl})`
                     }
                 ]
             }

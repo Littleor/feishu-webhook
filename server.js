@@ -4,6 +4,9 @@ const { secret } = require('./config.json');
 const { genSign } = require('./app/utils');
 const pushCommit = require('./app/pushCommit');
 const createBranch = require('./app/createBranch');
+const deleteBranch = require('./app/deleteBranch');
+const pullRequest = require('./app/pullRequest');
+const cmmmitComment = require('./app/cmmmitComment');
 
 const app = express();
 app.use(bodyparser.json())
@@ -36,8 +39,14 @@ async function send(req) {
     switch (type) {
         case 'push': // push commit
             return await pushCommit(timestamp, sign, payload);
-        case 'create':
+        case 'create': // create branch
             return await createBranch(timestamp, sign, payload);
+        case 'delete': // delete branch
+            return await deleteBranch(timestamp, sign, payload);
+        case 'pull_request':
+            return await pullRequest(timestamp, sign, payload);
+        case 'commit_comment':
+            return await cmmmitComment(timestamp, sign, payload);
     }
 }
 

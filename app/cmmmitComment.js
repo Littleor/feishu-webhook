@@ -36,25 +36,8 @@ module.exports = async function pushCommit(timestamp, sign, payload) {
                         }
                     },
                     {
-                        tag: "note",
-                        elements: [
-                            {
-                                tag: "img",
-                                img_key: "img_e344c476-1e58-4492-b40d-7dcffe9d6dfg",
-                                alt: {
-                                    tag: "plain_text",
-                                    content: `${user}`
-                                }
-                            },
-                            {
-                                tag: "plain_text",
-                                content: `${user}`
-                            }
-                        ]
-                    },
-                    {
                         tag: 'markdown',
-                        content: `*Comment:* ${comment}[点击查看comment详细信息](${commentUrl})`
+                        content: `*${user}* commit comment: ${comment}\n👉👉👉[点击查看comment详细信息](${commentUrl})`
                     }
                 ]
             }

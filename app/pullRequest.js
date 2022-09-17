@@ -38,25 +38,8 @@ module.exports = async function pullRequest(timestamp, sign, payload) {
 
                     },
                     {
-                        tag: "note",
-                        elements: [
-                            {
-                                tag: "img",
-                                img_key: "img_e344c476-1e58-4492-b40d-7dcffe9d6dfg",
-                                alt: {
-                                    tag: "plain_text",
-                                    content: `${user}`
-                                }
-                            },
-                            {
-                                tag: "plain_text",
-                                content: `${user}`
-                            }
-                        ]
-                    },
-                    {
                         tag: 'markdown',
-                        content: `${user} ${action} a pull request: ${content} [点击查看RP详细信息](${rpUrl})`
+                        content: `*${user}* ${action} a pull request: ${content}\n👉👉👉[点击查看RP详细信息](${rpUrl})`
                     }
                 ]
             }

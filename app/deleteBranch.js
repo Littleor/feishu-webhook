@@ -35,21 +35,8 @@ module.exports = async function deleteBranch(timestamp, sign, payload) {
                         },
                     },
                     {
-                        tag: "note",
-                        elements: [
-                            {
-                                tag: "img",
-                                img_key: "img_e344c476-1e58-4492-b40d-7dcffe9d6dfg",
-                                alt: {
-                                    tag: "plain_text",
-                                    content: `${user}`
-                                }
-                            },
-                            {
-                                tag: "plain_text",
-                                content: `${user} delete branch: ${branch}`
-                            }
-                        ]
+                        tag: 'markdown',
+                        content: `*${user}* delete branch: **${branch}**`
                     }
                 ]
             }

@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+    title: feishu-webhook
+    version: 1.0.0
+    license:
+        name: ISC
+    description: |-
+        Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3).
+
+        Back-end for feishu webhook
+
+paths:
+    /webhook/github:
+        post:
+            summary: webhook github
+            operationId: WebhookGithub
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/GithubWebhookReq'
+            responses:
+                '200':
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/LarkWebhookRes'
+                '204':
+                    description: No Content
+                '400':
+                    $ref: '#/components/responses/BadRequest'
+components:
+    responses:
+        BadRequest:
+            description: Bad request
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiResponse'
+        Unauthorized:
+            description: Unauthorized
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiResponse'
+        Forbidden:
+            description: Forbidden
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiResponse'
+        NotFound:
+            description: Not Found
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/ApiResponse'
+    schemas:
+        ApiResponse:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                type:
+                    type: string
+                message:
+                    type: string
+                errorCode:
+                    $ref: '#/components/schemas/ErrorCode'
+        ErrorCode:
+            type: string
+            enum:
+                - MISSING_PARAMETER
+                - MISSING_TOKEN
+                - INVALID_TOKEN
+                - ACTION_NOT_ALLOWED
+                - NOT_FOUND
+                - SERVER_ERROR
+                - UNEXPECTED_ERROR
+        GithubWebhookReq:
+            type: object
+            required:
+                - sender
+                - repository
+            properties:
+                sender:
+                    type: object
+                    required:
+                        - login
+                    properties:
+                        login:
+                            type: string
+                repository:
+                    type: object
+                    required:
+                        - name
+                        - html_url
+                    properties:
+                        name:
+                            type: string
+                        html_url:
+                            type: string
+                ref:
+                    type: string
+                created:
+                    type: boolean
+                deleted:
+                    type: boolean
+                forced:
+                    type: boolean
+                action:
+                    type: string
+                comment:
+                    type: object
+                    properties:
+                        body:
+                            type: string
+                        html_url:
+                            type: string
+                pull_request:
+                    type: object
+                    properties:
+                        title:
+                            type: string
+                        html_url:
+                            type: string
+                issue:
+                    type: object
+                    properties:
+                        title:
+                            type: string
+                        html_url:
+                            type: string
+                review:
+                    type: object
+                    properties:
+                        html_url:
+                            type: string
+                commits:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GithubWebhookCommit'
+        GithubWebhookCommit:
+            type: object
+            properties:
+                id:
+                    type: string
+                message:
+                    type: string
+                url:
+                    type: string
+        LarkWebhookRes:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+                StatusCode:
+                    type: integer
+                    format: int64
+                StatusMessage:
+                    type: string

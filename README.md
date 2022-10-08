@@ -12,7 +12,7 @@ yarn or npm i
 yarn start or npm start
 ```
 
-port: 9001
+port: 8090
 
 ## webhook 设置
 
@@ -26,7 +26,6 @@ port: 9001
 ## 飞书相关
 
 - https://open.feishu.cn/document/ukTMukTMukTM/ucTM5YjL3ETO24yNxkjN
-- 添加机器人时，打开安全设置的签名校验，并将``密钥``添加至 config.json secret 中。
 
 ### 支持类型
 - create branch
@@ -34,4 +33,17 @@ port: 9001
 - commit comment
 - pull request
 - push commit
+- issues
+- issue comment
+- pull request review comment
 
+## OPENAPI
+
+### Generate new schema file with openapi.yaml, run under folder path
+```
+npx openapi-typescript openapi.yaml --output ./app/schema/GeneratedSchema.ts
+```
+
+### 其他
+
+-  node-fetch 使用*2.6.5*版本,

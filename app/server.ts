@@ -2,11 +2,13 @@ import express, { Express, Request, Response } from 'express';
 import dotEnv from 'dotenv';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { router as WebhookRoutes } from './routes/WebhookApi';
+import path from 'path';
 
-dotEnv.config();
+dotEnv.config({ path: path.resolve(__dirname, './config/.env') });
 
 const app: Express = express();
-const port = 8090;
+const port = process.env.PORT;
+console.log(path.resolve(__dirname, './config/.env'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

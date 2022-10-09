@@ -8,7 +8,7 @@ router.post('/github', async (req: Request, res: Response, next: NextFunction) =
     console.log('Rech Post /webhook/github');
     const payload = req.body;
     const type = req.headers['x-github-event'] as string;
-    console.log('webhook type', type);
+    console.log('github webhook type', type);
     GithubController.generateLarkMessage(type, payload)
         .then((result) => {
             apiSuccessResponse(res, result);

@@ -16,9 +16,9 @@ port: 8090
 
 ## webhook 设置
 
-1. Repository>Settings>Webhooks
-2. Add webhook
-3. Add Payload URL(e.g. https://www.example.com/push/)
+1. Repository > Settings > Webhooks
+2. Add Webhook
+3. Add Payload URL(e.g. https://www.example.com/webhook/github)
 4. Content type set to ``application/json``
 5. Send me everything when trigger this webhook
 

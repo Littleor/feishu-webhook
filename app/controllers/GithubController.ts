@@ -278,9 +278,13 @@ function generateWorkflowRunMessage(payload: GithubWebhookReq) {
         throw new ServerError('the server not support the workflow');
     }
     return {
-        title: `Workflow Run[${action}]`,
+        title: `Workflow`,
         template: 'green',
         elements: [
+            {
+                tag: 'markdown',
+                content: `**Action**: ${action}}`,
+            },
             {
                 tag: 'markdown',
                 content: `**Status**: ${status}${conclusion ? `(${conclusion})` : ''}`,

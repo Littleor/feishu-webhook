@@ -4,120 +4,135 @@
  */
 
 export interface paths {
-  "/webhook/github": {
-    post: operations["WebhookGithub"];
-  };
+    '/webhook/github': {
+        post: operations['WebhookGithub'];
+    };
 }
 
 export interface components {
-  schemas: {
-    ApiResponse: {
-      /** Format: int32 */
-      code?: number;
-      type?: string;
-      message?: string;
-      errorCode?: components["schemas"]["ErrorCode"];
+    schemas: {
+        ApiResponse: {
+            /** Format: int32 */
+            code?: number;
+            type?: string;
+            message?: string;
+            errorCode?: components['schemas']['ErrorCode'];
+        };
+        /** @enum {string} */
+        ErrorCode:
+            | 'MISSING_PARAMETER'
+            | 'MISSING_TOKEN'
+            | 'INVALID_TOKEN'
+            | 'ACTION_NOT_ALLOWED'
+            | 'NOT_FOUND'
+            | 'SERVER_ERROR'
+            | 'UNEXPECTED_ERROR';
+        GithubWebhookReq: {
+            sender: {
+                login: string;
+            };
+            repository: {
+                name: string;
+                html_url: string;
+            };
+            ref?: string;
+            created?: boolean;
+            deleted?: boolean;
+            forced?: boolean;
+            action?: string;
+            comment?: {
+                body?: string;
+                html_url?: string;
+            };
+            pull_request?: {
+                title?: string;
+                html_url?: string;
+            };
+            issue?: {
+                title?: string;
+                html_url?: string;
+            };
+            review?: {
+                html_url?: string;
+            };
+            commits?: components['schemas']['GithubWebhookCommit'][];
+            workflow?: {
+                id: number;
+                name: string;
+                state: string;
+                url: string;
+            };
+            workflow_run?: {
+                id: number;
+                name: string;
+                html_url: string;
+                status: string;
+                conclusion: string;
+                event: string;
+                head_branch: string;
+            };
+        };
+        GithubWebhookCommit: {
+            id?: string;
+            message?: string;
+            url?: string;
+        };
+        LarkWebhookRes: {
+            /** Format: int64 */
+            code?: number;
+            msg?: string;
+            /** Format: int64 */
+            StatusCode?: number;
+            StatusMessage?: string;
+        };
     };
-    /** @enum {string} */
-    ErrorCode:
-      | "MISSING_PARAMETER"
-      | "MISSING_TOKEN"
-      | "INVALID_TOKEN"
-      | "ACTION_NOT_ALLOWED"
-      | "NOT_FOUND"
-      | "SERVER_ERROR"
-      | "UNEXPECTED_ERROR";
-    GithubWebhookReq: {
-      sender: {
-        login: string;
-      };
-      repository: {
-        name: string;
-        html_url: string;
-      };
-      ref?: string;
-      created?: boolean;
-      deleted?: boolean;
-      forced?: boolean;
-      action?: string;
-      comment?: {
-        body?: string;
-        html_url?: string;
-      };
-      pull_request?: {
-        title?: string;
-        html_url?: string;
-      };
-      issue?: {
-        title?: string;
-        html_url?: string;
-      };
-      review?: {
-        html_url?: string;
-      };
-      commits?: components["schemas"]["GithubWebhookCommit"][];
+    responses: {
+        /** Bad request */
+        BadRequest: {
+            content: {
+                'application/json': components['schemas']['ApiResponse'];
+            };
+        };
+        /** Unauthorized */
+        Unauthorized: {
+            content: {
+                'application/json': components['schemas']['ApiResponse'];
+            };
+        };
+        /** Forbidden */
+        Forbidden: {
+            content: {
+                'application/json': components['schemas']['ApiResponse'];
+            };
+        };
+        /** Not Found */
+        NotFound: {
+            content: {
+                'application/json': components['schemas']['ApiResponse'];
+            };
+        };
     };
-    GithubWebhookCommit: {
-      id?: string;
-      message?: string;
-      url?: string;
-    };
-    LarkWebhookRes: {
-      /** Format: int64 */
-      code?: number;
-      msg?: string;
-      /** Format: int64 */
-      StatusCode?: number;
-      StatusMessage?: string;
-    };
-  };
-  responses: {
-    /** Bad request */
-    BadRequest: {
-      content: {
-        "application/json": components["schemas"]["ApiResponse"];
-      };
-    };
-    /** Unauthorized */
-    Unauthorized: {
-      content: {
-        "application/json": components["schemas"]["ApiResponse"];
-      };
-    };
-    /** Forbidden */
-    Forbidden: {
-      content: {
-        "application/json": components["schemas"]["ApiResponse"];
-      };
-    };
-    /** Not Found */
-    NotFound: {
-      content: {
-        "application/json": components["schemas"]["ApiResponse"];
-      };
-    };
-  };
 }
 
 export interface operations {
-  WebhookGithub: {
-    responses: {
-      /** OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["LarkWebhookRes"];
+    WebhookGithub: {
+        responses: {
+            /** OK */
+            200: {
+                content: {
+                    'application/json': components['schemas']['LarkWebhookRes'];
+                };
+            };
+            /** No Content */
+            204: never;
+            400: components['responses']['BadRequest'];
         };
-      };
-      /** No Content */
-      204: never;
-      400: components["responses"]["BadRequest"];
+        requestBody: {
+            content: {
+                'application/json': components['schemas']['GithubWebhookReq'];
+            };
+        };
     };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["GithubWebhookReq"];
-      };
-    };
-  };
 }
 
 export interface external {}

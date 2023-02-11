@@ -8,9 +8,13 @@ type LarkWebhookRes = components['schemas']['LarkWebhookRes'];
 type GithubWebhookCommit = components['schemas']['GithubWebhookCommit'];
 
 // webhook
-const uri = 'https://open.feishu.cn/open-apis/bot/v2/hook/437ee9c4-267b-4948-bf7e-32da9bca4607';
+const uri = process.env.FEISHU_URI;
 // signature secret
-const secret = 'KaVrOt6WB1G6UIIQOxEnZd';
+const secret = process.env.FEISHU_SECRET;
+
+if (!uri || !secret) {
+    throw new ServerError('Please set the environment variable FEISHU_URI and FEISHU_SECRET:');
+}
 
 const GithubRequestEvent = new Map([
     ['create', generateCreateBranchMessage],
@@ -21,6 +25,7 @@ const GithubRequestEvent = new Map([
     ['issues', generateIssuesMessage],
     ['issue_comment', generateIssueCommentMessage],
     ['pull_request_review_comment', generatePullRequestReviewCommentMessage],
+    ['workflow_run', generateWorkflowRunMessage],
 ]);
 
 const generateLarkMessage = async (type: string, payload: GithubWebhookReq): Promise<LarkWebhookRes> => {
@@ -256,6 +261,33 @@ function generatePullRequestReviewCommentMessage(payload: GithubWebhookReq) {
                             ? `**${user}** deleted pull request review comment: ${comment}\n👉👉👉[点击查看comment详细信息](${commentUrl})`
                             : `**${user}** ${action} pull request review comment: ${comment}\n👉👉👉[点击查看comment详细信息](${commentUrl})`,
                 },
+            },
+        ],
+    };
+}
+
+function generateWorkflowRunMessage(payload: GithubWebhookReq) {
+    const user = payload.sender.login;
+    const action = payload.action;
+    const workflow = payload.workflow_run?.name;
+    const workflowUrl = payload.workflow_run?.html_url;
+    const conclusion = payload.workflow_run?.conclusion;
+    const status = payload.workflow_run?.status;
+    const whiteList = JSON.parse(process.env.WORKFLOW_WHITELIST || '[]');
+    if (!whiteList.includes(action)) {
+        throw new ServerError('the server not support the workflow');
+    }
+    return {
+        title: `Workflow Run[${action}]`,
+        template: 'green',
+        elements: [
+            {
+                tag: 'markdown',
+                content: `**Status**: ${status}${conclusion ? `(${conclusion})` : ''}`,
+            },
+            {
+                tag: 'markdown',
+                content: `**${user}** ${action} workflow: ${workflow}\n👉👉👉[点击查看workflow详细信息](${workflowUrl})`,
             },
         ],
     };
